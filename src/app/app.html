@@ -1,5 +1,48 @@
 <app-navbar></app-navbar>
 
-<main class="h-screen"></main>
+<main class="min-h-screen py-5">
+  <div
+    class="container px-4 h-auto grid gap-5 mx-auto grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
+  >
+    @for (product of products; track product.id) {
+      <article
+        (click)="logProductNameAndId({ id: product.id, name: product.name })"
+        class="rounded-md bg-slate-800 p-2 w-auto relative cursor-pointer"
+      >
+        <div class="w-full h-50 group">
+          <img
+            [src]="product.image"
+            [alt]="product.name"
+            class="w-full h-full object-contain group-hover:scale-110 transition-transform duration-200"
+          />
+        </div>
+        <div
+          [class.bg-slate-950]="product.price >= 10"
+          [class.bg-emerald-600]="product.price < 10"
+          class="absolute top-0 right-0 w-auto px-1 py-0.5 bg-slat text-white rounded-tr-md text-[14px] font-semibold"
+        >
+          ${{ product.price }}
+        </div>
+        <div class="space-y-1.5 text-slate-300">
+          <h3 class="lg:text-lg text-[16px] font-semibold">
+            {{ truncateText({ txt: product.name, length: 18 }) }}
+          </h3>
+          <p class="text-sm">vegetarian: {{ product.vegeterian }}</p>
+          <p class="text-sm">
+            spiciness:
+            <span
+              [class.text-red-500]="product.spiciness >= 4"
+              [class.text-orange-500]="product.spiciness < 4 && product.spiciness >= 2"
+              class="text-emerald-500"
+            >
+              {{ getSpicinessLabel(product.spiciness) }}
+            </span>
+          </p>
+          <p class="text-sm">nuts: {{ product.nuts }}</p>
+        </div>
+      </article>
+    }
+  </div>
+</main>
 
 <app-footer></app-footer>
