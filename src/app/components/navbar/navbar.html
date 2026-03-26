@@ -21,7 +21,7 @@
 
     @if (showMobileNav) {
       <div
-        class="flex flex-col gap-3 absolute top-full bg-slate-950 border-t border-slate-700 w-full left-0 p-4"
+        class="z-10 flex flex-col gap-3 absolute top-full bg-slate-950 border-t border-slate-700 w-full left-0 p-4"
       >
         @for (link of links; track link.id) {
           <a
