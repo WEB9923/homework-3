@@ -10,6 +10,10 @@ import { IProduct } from './models/interfaces';
   styleUrl: './app.css',
 })
 export class App {
+  activeSortField: string = '';
+  activeSortMode: string = '';
+  activeCategoryId: number | null = null;
+
   truncateText({ txt, length }: { txt: string; length: number }): string {
     return txt.length > length ? txt.slice(0, length) + '...' : txt;
   }
@@ -24,7 +28,45 @@ export class App {
     console.log(`Product: id-${id}, name-${name}`);
   }
 
-  products: IProduct[] = [
+  toggleSort(field: 'price' | 'spiciness', mode: 'asc' | 'desc'): void {
+    if (this.activeSortField === field && this.activeSortMode === mode) {
+      this.activeSortField = '';
+      this.activeSortMode = '';
+      this.products = [...this.defaultProducts];
+      return;
+    }
+
+    this.activeSortField = field;
+    this.activeSortMode = mode;
+
+    const sorted = [...this.defaultProducts];
+
+    mode === 'asc'
+      ? sorted.sort((a, b) => a[field] - b[field])
+      : sorted.sort((a, b) => b[field] - a[field]);
+
+    this.products = sorted;
+  }
+
+  toggleCategory(id: number): void {
+    if (this.activeCategoryId === id) {
+      this.activeCategoryId = null;
+      this.products = [...this.defaultProducts];
+      return;
+    }
+
+    this.activeCategoryId = id;
+
+    this.products = this.defaultProducts.filter((product): boolean => product.categoryId === id);
+  }
+
+  getCategoryName(categoryId: number): string {
+    const category = this.categories.find((cat) => cat.id === categoryId);
+
+    return category ? category.name : 'unknown';
+  }
+
+  defaultProducts: IProduct[] = [
     {
       id: 1,
       name: 'Laab kai chicken salad',
@@ -294,6 +336,43 @@ export class App {
       vegeterian: false,
       spiciness: 1,
       categoryId: 8,
+    },
+  ];
+
+  products = [...this.defaultProducts];
+
+  categories: { id: number; name: string }[] = [
+    {
+      id: 1,
+      name: 'Salads',
+    },
+    {
+      id: 2,
+      name: 'Soups',
+    },
+    {
+      id: 3,
+      name: 'Chicken-Dishes',
+    },
+    {
+      id: 4,
+      name: 'Beef-Dishes',
+    },
+    {
+      id: 5,
+      name: 'Seafood-Dishes',
+    },
+    {
+      id: 6,
+      name: 'Vegetable-Dishes',
+    },
+    {
+      id: 7,
+      name: 'Bits&Bites',
+    },
+    {
+      id: 8,
+      name: 'On-The-Side',
     },
   ];
 }

@@ -1,47 +1,105 @@
 <app-navbar></app-navbar>
 
 <main class="min-h-screen py-5">
-  <div
-    class="container px-4 h-auto grid gap-5 mx-auto grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
-  >
-    @for (product of products; track product.id) {
-      <article
-        (click)="logProductNameAndId({ id: product.id, name: product.name })"
-        class="rounded-md bg-slate-800 p-2 w-auto relative cursor-pointer"
-      >
-        <div class="w-full h-50 group">
-          <img
-            [src]="product.image"
-            [alt]="product.name"
-            class="w-full h-full object-contain group-hover:scale-110 transition-transform duration-200"
-          />
-        </div>
-        <div
-          [class.bg-slate-950]="product.price >= 10"
-          [class.bg-emerald-600]="product.price < 10"
-          class="absolute top-0 right-0 w-auto px-1 py-0.5 bg-slat text-white rounded-tr-md text-[14px] font-semibold"
-        >
-          ${{ product.price }}
-        </div>
-        <div class="space-y-1.5 text-slate-300">
-          <h3 class="lg:text-lg text-[16px] font-semibold">
-            {{ truncateText({ txt: product.name, length: 18 }) }}
-          </h3>
-          <p class="text-sm">vegetarian: {{ product.vegeterian }}</p>
-          <p class="text-sm">
-            spiciness:
-            <span
-              [class.text-red-500]="product.spiciness >= 4"
-              [class.text-orange-500]="product.spiciness < 4 && product.spiciness >= 2"
-              class="text-emerald-500"
+  <div class="container px-4 mx-auto">
+    <div class="flex justify-between mb-10 gap-10">
+      <div class="flex items-end gap-1">
+        @for (category of categories; track category.id) {
+          <button
+            (click)="toggleCategory(category.id)"
+            class="text-slate-300 px-1.5 py-1.5 bg-gray-800 cursor-pointer hover:bg-gray-700 transition-colors duration-200"
+            [class.bg-violet-700]="activeCategoryId === category.id"
+          >
+            {{ category.name }}
+          </button>
+        }
+      </div>
+      <div class="flex items-center gap-5">
+        <div class="flex flex-col gap-1">
+          <p class="text-xs text-slate-400">Sort by spiciness:</p>
+          <div class="flex items-center rounded-md">
+            <button
+              (click)="toggleSort('spiciness', 'asc')"
+              class="px-2 py-1.5 overflow-hidden bg-gray-800 text-slate-300 cursor-pointer lowercase hover:bg-gray-700 transition-colors duration-200"
+              [class.bg-violet-700]="activeSortField == 'spiciness' && activeSortMode === 'asc'"
             >
-              {{ getSpicinessLabel(product.spiciness) }}
-            </span>
-          </p>
-          <p class="text-sm">nuts: {{ product.nuts }}</p>
+              asc
+            </button>
+            <div class="h-full w-px bg-slate-900"></div>
+            <button
+              (click)="toggleSort('spiciness', 'desc')"
+              [class.bg-violet-700]="activeSortField == 'spiciness' && activeSortMode === 'desc'"
+              class="px-2 py-1.5 overflow-hidden bg-gray-800 text-slate-300 cursor-pointer lowercase hover:bg-gray-700 transition-colors duration-200"
+            >
+              desc
+            </button>
+          </div>
         </div>
-      </article>
-    }
+        <div class="flex flex-col gap-1">
+          <p class="text-xs text-slate-400">Sort by price:</p>
+          <div class="flex items-center rounded-md">
+            <button
+              (click)="toggleSort('price', 'asc')"
+              class="px-2 py-1.5 overflow-hidden bg-gray-800 text-slate-300 cursor-pointer lowercase hover:bg-gray-700 transition-colors duration-200"
+              [class.bg-violet-700]="activeSortField == 'price' && activeSortMode === 'asc'"
+            >
+              asc
+            </button>
+            <div class="h-full w-px bg-slate-900"></div>
+            <button
+              (click)="toggleSort('price', 'desc')"
+              [class.bg-violet-700]="activeSortField == 'price' && activeSortMode === 'desc'"
+              class="px-2 py-1.5 overflow-hidden bg-gray-800 text-slate-300 cursor-pointer lowercase hover:bg-gray-700 transition-colors duration-200"
+            >
+              desc
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="h-auto grid gap-5 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
+    >
+      @for (product of products; track product.id) {
+        <article
+          (click)="logProductNameAndId({ id: product.id, name: product.name })"
+          class="rounded-md bg-slate-800 p-2 w-auto relative cursor-pointer"
+        >
+          <div class="w-full h-50 group">
+            <img
+              [src]="product.image"
+              [alt]="product.name"
+              class="w-full h-full object-contain group-hover:scale-110 transition-transform duration-200"
+            />
+          </div>
+          <div
+            [class.bg-slate-950]="product.price >= 10"
+            [class.bg-emerald-600]="product.price < 10"
+            class="absolute top-0 right-0 w-auto px-1 py-0.5 bg-slat text-white rounded-tr-md text-[14px] font-semibold"
+          >
+            ${{ product.price }}
+          </div>
+          <div class="space-y-1.5 text-slate-300">
+            <h3 class="lg:text-lg text-[16px] font-semibold">
+              {{ truncateText({ txt: product.name, length: 18 }) }}
+            </h3>
+            <p class="text-sm">vegetarian: {{ product.vegeterian }}</p>
+            <p class="text-sm">
+              spiciness:
+              <span
+                [class.text-red-500]="product.spiciness >= 4"
+                [class.text-orange-500]="product.spiciness < 4 && product.spiciness >= 2"
+                class="text-emerald-500"
+              >
+                {{ getSpicinessLabel(product.spiciness) }}
+              </span>
+            </p>
+            <p class="text-sm">nuts: {{ product.nuts }}</p>
+            <p class="text-sm">category: {{ getCategoryName(product.categoryId) }}</p>
+          </div>
+        </article>
+      }
+    </div>
   </div>
 </main>
 
