@@ -2,10 +2,11 @@ import { Component } from '@angular/core';
 import { Navbar } from './components/navbar/navbar';
 import { Footer } from './components/footer/footer';
 import { IProduct } from './models/interfaces';
+import { LucideChartBarStacked } from '@lucide/angular';
 
 @Component({
   selector: 'app-root',
-  imports: [Navbar, Footer],
+  imports: [Navbar, Footer, LucideChartBarStacked],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
@@ -13,6 +14,7 @@ export class App {
   activeSortField: string = '';
   activeSortMode: string = '';
   activeCategoryId: number | null = null;
+  showMobileCategories: boolean = false;
 
   truncateText({ txt, length }: { txt: string; length: number }): string {
     return txt.length > length ? txt.slice(0, length) + '...' : txt;
@@ -60,10 +62,20 @@ export class App {
     this.products = this.defaultProducts.filter((product): boolean => product.categoryId === id);
   }
 
+  toggleMobileCategory(id: number): void {
+    this.toggleCategory(id);
+
+    this.showMobileCategories = false;
+  }
+
   getCategoryName(categoryId: number): string {
-    const category = this.categories.find((cat) => cat.id === categoryId);
+    const category = this.categories.find((cat): boolean => cat.id === categoryId);
 
     return category ? category.name : 'unknown';
+  }
+
+  handleShowMobileMenu(): void {
+    this.showMobileCategories = !this.showMobileCategories;
   }
 
   defaultProducts: IProduct[] = [

@@ -3,21 +3,44 @@
 <main class="min-h-screen py-5">
   <div class="container px-4 mx-auto">
     <div class="flex justify-between mb-10 gap-10">
-      <div class="flex items-end gap-1">
+      <div class="items-end gap-1 xl:flex hidden">
         @for (category of categories; track category.id) {
           <button
             (click)="toggleCategory(category.id)"
-            class="text-slate-300 px-1.5 py-1.5 bg-gray-800 cursor-pointer hover:bg-gray-700 transition-colors duration-200"
+            class="text-slate-300 px-1.5 py-1.5 border border-gray-700 bg-gray-800 cursor-pointer hover:bg-gray-700 transition-colors duration-200"
             [class.bg-violet-700]="activeCategoryId === category.id"
           >
             {{ category.name }}
           </button>
         }
       </div>
+      <div class="relative xl:hidden flex">
+        <button
+          (click)="handleShowMobileMenu()"
+          class="w-9 h-9 flex items-center bg-gray-800 hover:bg-gray-700 mt-auto rounded-sm text-slate-300 justify-center cursor-pointer"
+        >
+          <svg lucideChartBarStacked></svg>
+        </button>
+        @if (showMobileCategories) {
+          <div
+            class="absolute top-full lg:min-w-max w-45 flex-col gap-1 border border-gray-700 bg-gray-800 p-4 rounded-md shadow max-w-62.5 left-0 flex items-center z-10"
+          >
+            @for (category of categories; track category.id) {
+              <button
+                (click)="toggleMobileCategory(category.id)"
+                class="text-slate-300 px-1.5 py-1.5 w-full text-left bg-gray-800 cursor-pointer hover:bg-gray-700 transition-colors duration-200"
+                [class.bg-violet-700]="activeCategoryId === category.id"
+              >
+                {{ category.name }}
+              </button>
+            }
+          </div>
+        }
+      </div>
       <div class="flex items-center gap-5">
         <div class="flex flex-col gap-1">
           <p class="text-xs text-slate-400">Sort by spiciness:</p>
-          <div class="flex items-center rounded-md">
+          <div class="flex items-center border border-gray-700">
             <button
               (click)="toggleSort('spiciness', 'asc')"
               class="px-2 py-1.5 overflow-hidden bg-gray-800 text-slate-300 cursor-pointer lowercase hover:bg-gray-700 transition-colors duration-200"
@@ -37,7 +60,7 @@
         </div>
         <div class="flex flex-col gap-1">
           <p class="text-xs text-slate-400">Sort by price:</p>
-          <div class="flex items-center rounded-md">
+          <div class="flex items-center border border-gray-700">
             <button
               (click)="toggleSort('price', 'asc')"
               class="px-2 py-1.5 overflow-hidden bg-gray-800 text-slate-300 cursor-pointer lowercase hover:bg-gray-700 transition-colors duration-200"
